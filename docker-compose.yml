@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres:alpine
+    image: postgres:12-alpine
     restart: always
     volumes:
       - db:/var/lib/postgresql/data
@@ -26,6 +26,15 @@ services:
     networks:
       - proxy-tier
       - default
+
+  cron:
+    image: nextcloud:apache
+    restart: always
+    volumes:
+      - nextcloud:/var/www/html
+    entrypoint: /cron.sh
+    depends_on:
+      - db
 
   proxy:
     build: ./proxy
